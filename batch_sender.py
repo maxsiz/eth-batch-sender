@@ -19,10 +19,11 @@ def handle_batch_transfer(_receivers_list):
         #1. Prepare contrac method
         ########################################################
         tx_data = token.encodeABI(
-            fn_name="multiTransfer", 
+            #fn_name="multiTransfer", 
+            fn_name="promo",
             args=[
-                [Web3.toChecksumAddress(a) for a in _receivers_list], #address array
-                [1*10**18 for a in range(len(_receivers_list))] #amount array
+                [Web3.toChecksumAddress(a) for a in _receivers_list] #address array
+                #[1*10**18 for a in range(len(_receivers_list))] #amount array
             ]
         )
         logging.debug('tx_data={}'.format(tx_data))
@@ -65,7 +66,7 @@ def handle_batch_transfer(_receivers_list):
         
         #Send Raw tx
         tx_hash = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
-        logging.debug('Please see in etherscan tx_hash={}'.format(tx_hash.hex()))
+        logging.info('Please see in etherscan tx_hash={}'.format(tx_hash.hex()))
 
     finally:
         pass
@@ -138,13 +139,13 @@ token = w3.eth.contract(address=config.ADDRESS_TOKEN,
 
 name     = token.functions.name().call()
 symbol   = token.functions.symbol().call()
-decimals = token.functions.decimals().call()
+#decimals = token.functions.decimals().call()
 totalSupply = token.functions.totalSupply().call
-logging.info('Token contract at address {} initialized:{} ({}), decimals={}'.format(
+logging.info('Token contract at address {} initialized:{} ({}), decimals='.format(
     config.ADDRESS_TOKEN,
     name,
     symbol,
-    decimals
+    #decimals
     )
 )
 

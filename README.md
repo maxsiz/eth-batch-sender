@@ -36,8 +36,12 @@ cat receivers.csv
 docker-compose -p batch -f docker-compose-local.yaml up
 ```
 ### Examples of tx sent
-[Token ERC20+ multiTransfer([],[])](https://rinkeby.etherscan.io/address/0x9cae745007abc88e7af872f704795e3823fd7d91#code)  
+[DEMO PROMO vTOKEN with promo(address[] _rec)](https://rinkeby.etherscan.io/token/0x131220c96a08020cc9e58954ddc26c89b6dc2b13)  
+[1000+ address tx](https://rinkeby.etherscan.io/tx/0x5a6fb25ece2c726508bcf2228adb0be7b658ea2b02902fb29b3717d2d967a8e2)  
+[PROMO token code](./yAtoken.sol)
+-------------------------------------------------------------------
 
+[Token ERC20+ multiTransfer([],[])](https://rinkeby.etherscan.io/address/0x9cae745007abc88e7af872f704795e3823fd7d91#code)  
 
 Transactions:  
 https://rinkeby.etherscan.io/tx/0x994ced7df05924bc991a8b2810f85358035f652aeda11d09a0add1065a58a74b  
