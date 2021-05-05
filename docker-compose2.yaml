@@ -1,0 +1,12 @@
+version: '3'
+services:
+  
+  batch_sender_service:
+    image: "eth_batch_sender:local"
+    #container_name: eth_sender
+    volumes:
+       - ./:/app
+    env_file: ./.env.local
+    network_mode: "host"
+    command: ["gettx.py"]    
+
