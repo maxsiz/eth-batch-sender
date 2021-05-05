@@ -183,7 +183,7 @@ class SendLog:
             _receivers_index, 
             _tx_hash, 
             _tx_state,
-            datetime.datetime.now().time()
+            datetime.datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
         )
         logging.debug('add logg rec')
         with open(self.log_file_name, 'a') as log_file:
@@ -204,7 +204,7 @@ class SendLog:
             _receivers_index, 
             _tx_hash, 
             _tx_state,
-            datetime.datetime.now().time()
+            datetime.datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
         )
         #logging.debug('Lets save new lines: {}'.format(log_lines))
         with open(self.log_file_name, 'w') as log_file:
