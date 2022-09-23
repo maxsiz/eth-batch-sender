@@ -22,14 +22,14 @@ def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
         #1. Prepare contrac method
         ########################################################
         tx_data = token.encodeABI(
-            fn_name="transferMany", #qdao
+            #fn_name="transferMany", #qdao
             #fn_name="promo",
-            #fn_name="multiTransfer", #qdefi
+            fn_name="multiTransfer", #qdefi
             args=[
                 [Web3.toChecksumAddress(a) for a in _receivers_list], #address array
                 #[1*10**18 for a in range(len(_receivers_list))] #amount array for qdao
-                _amounts #amount array for qdao
-                #1*10**16 #constant amount for qdefi
+                #_amounts #amount array for qdao
+                1*10**16 #constant amount for qdefi
             ]
         )
         logging.debug('tx_data={}'.format(tx_data))
@@ -127,9 +127,9 @@ def main():
 
             logging.info('Sending from_index(string)={} to_index(string)={}..'.format(from_index, to_index))           
             tx_hash = handle_batch_transfer(
-                receivers_list[from_index-1:to_index-1], 
+                receivers_list[from_index-1:to_index], 
                 file1, 
-                amounts[from_index-1:to_index-1]
+                amounts[from_index-1:to_index]
             )
             logging.info('send array [{}:{}], from {}, to {},  len={}'.format(
                 from_index - 1,

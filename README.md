@@ -34,12 +34,18 @@ cat receivers.csv
 
 #3. Just run and check output
 docker-compose -p batch -f docker-compose-local.yaml up
+
+#4. For long receivers list please use this
+# receiver record format: `address;float_amount`
+# float amount may be: 2,1E+016 or 2.1E+016 or 5000000000000000
+docker-compose -p batch -f docker-compose-local2.yaml up
 ```
 ### Examples of tx sent
 [DEMO PROMO vTOKEN with promo(address[] _rec)](https://rinkeby.etherscan.io/token/0x131220c96a08020cc9e58954ddc26c89b6dc2b13)  
 [1000+ address tx](https://rinkeby.etherscan.io/tx/0x5a6fb25ece2c726508bcf2228adb0be7b658ea2b02902fb29b3717d2d967a8e2)  
 [PROMO token code](./yAtoken.sol)
--------------------------------------------------------------------
+
+-------------------------------------------------------------
 
 [Token ERC20+ multiTransfer([],[])](https://rinkeby.etherscan.io/address/0x9cae745007abc88e7af872f704795e3823fd7d91#code)  
 
@@ -49,3 +55,11 @@ https://rinkeby.etherscan.io/tx/0x53ef83aaa38541c233b4d1970693a6c9b9e0f5fcf61e18
 
 ### Adaptation
 Lines 21-27 of the `batch_sender.py` file can be changed if the method has a different name and parameters.
+
+
+### Tokens
+QDEFi
+https://bscscan.com/token/0x8F00A6D49165C4679Fb851846BcF18Bb37546084
+
+QDAOI
+https://bscscan.com/token/0x2bf5b0df27f31388d5b825b39bd752bed6c7f7e9

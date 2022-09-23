@@ -14,8 +14,8 @@ contract Promo {
         public
         {
             totalSupply = 80000000000000;
-            name   = "A! WWW.SPACESWAP.APP ! TOP DEFI AGGREGATOR ! EXCELLENT FARMING";
-            symbol = "A! WWW.SPACESWAP.APP ! TOP DEFI AGGREGATOR ! EXCELLENT FARMING";
+            name   = "www.168pools.com - visit now for DeFi ROi and POOLs stats";
+            symbol = "www.168pools.com - visit now for DeFi ROi and POOLs stats";
             emit Transfer(address(0), address(this), 80000000000000);
         }
     

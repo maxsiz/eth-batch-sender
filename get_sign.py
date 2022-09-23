@@ -9,31 +9,24 @@ import time
 import config
 
 
-def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
+def handle_batch_transfer(_receivers_list):
     """
     Sign  and Send new transfer transaction in Ethereum blockchain
     
     """
     try:
-        if  len(_receivers_list) > 254:
-            logging.warning('!!!!!!!!Param list is longer 254, {}. You can comment it if contract can accept it.'.format(len(_receivers_list)))
-            return;
         #######################################################
         #1. Prepare contrac method
         ########################################################
         tx_data = token.encodeABI(
-            fn_name="transferMany", #qdao
-            #fn_name="promo",
-            #fn_name="multiTransfer", #qdefi
+            #fn_name="multiTransfer", 
+            fn_name="promo",
             args=[
-                [Web3.toChecksumAddress(a) for a in _receivers_list], #address array
-                #[1*10**18 for a in range(len(_receivers_list))] #amount array for qdao
-                _amounts #amount array for qdao
-                #1*10**16 #constant amount for qdefi
+                [Web3.toChecksumAddress(a) for a in _receivers_list] #address array
+                #[1*10**18 for a in range(len(_receivers_list))] #amount array
             ]
         )
         logging.debug('tx_data={}'.format(tx_data))
-
         ###################################################
         #2. eth tx
         tx_full_data={
@@ -41,8 +34,7 @@ def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
             'from': config.ADDRESS_OPERATOR, 
             'data': tx_data,
             'nonce':w3.eth.getTransactionCount(config.ADDRESS_OPERATOR), 
-            #'nonce':2, 
-            'gas':700000, 
+            'gas':2500000, 
             'gasPrice': _gasPrice
         }
         logging.debug('tx_full_data={}'.format(tx_full_data))
@@ -74,7 +66,7 @@ def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
         
         #Send Raw tx
         tx_hash = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
-        logging.info('File {}  etherscan tx_hash= {}'.format(_file ,tx_hash.hex()))
+        logging.info('Please see in etherscan tx_hash={}'.format(tx_hash.hex()))
 
     finally:
         pass
@@ -99,15 +91,8 @@ def main():
     with open(file1) as r_file:
         lines = r_file.readlines()
         receivers_list=[s.rstrip('\n') for s in lines]
-        #try search amounts
-        if ';' in receivers_list[0]:
-            amounts = [int(x.split(';')[1]) for x in receivers_list]
-            receivers_list = [x.split(';')[0] for x in receivers_list]
-            logging.debug('Amounts are {}'.format(amounts))
-
         logging.debug('Receivers are {}'.format(receivers_list))
-
-        handle_batch_transfer(receivers_list, file1, amounts) 
+        handle_batch_transfer(receivers_list) 
 
 
 
@@ -130,7 +115,7 @@ logging.basicConfig(format='%(asctime)s->%(levelname)s:[in %(filename)s:%(lineno
 
 #txSenderAddress = '0x86C3582b6505CcB8faDAcb211fC1E5a8fDD26E91' #ExoACCICO
 #web3 provider initializing
-if 'http:'.upper() in config.WEB3_PROVIDER.upper() or 'https:'.upper() in config.WEB3_PROVIDER.upper():
+if 'http:'.upper() in config.WEB3_PROVIDER.upper():
     w3 = Web3(HTTPProvider(config.WEB3_PROVIDER))
 elif 'ws:'.upper()  in config.WEB3_PROVIDER.upper() or 'wss:'.upper() in config.WEB3_PROVIDER.upper():
     w3 = Web3(Web3.WebsocketProvider(config.WEB3_PROVIDER))    
@@ -154,14 +139,13 @@ token = w3.eth.contract(address=config.ADDRESS_TOKEN,
 
 name     = token.functions.name().call()
 symbol   = token.functions.symbol().call()
-decimals = token.functions.decimals().call()
-totalSupply = token.functions.totalSupply().call()
-logging.info('Token contract at address {} initialized:{} ({}), decimals={}, totalSupply={}'.format(
+#decimals = token.functions.decimals().call()
+totalSupply = token.functions.totalSupply().call
+logging.info('Token contract at address {} initialized:{} ({}), decimals='.format(
     config.ADDRESS_TOKEN,
     name,
     symbol,
-    decimals,
-    totalSupply
+    #decimals
     )
 )
 
