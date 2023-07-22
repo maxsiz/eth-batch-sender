@@ -3,7 +3,7 @@ import logging
 import os
 import json
 import sys
-from web3 import Web3, HTTPProvider, IPCProvider, WebsocketProvider, middleware
+from web3 import Web3, HTTPProvider, IPCProvider, WebsocketProvider#, middleware
 from web3.gas_strategies.time_based import medium_gas_price_strategy
 import datetime, random
 import config
@@ -26,10 +26,10 @@ def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
             #fn_name="promo",
             fn_name="multiTransfer", #qdefi
             args=[
-                [Web3.toChecksumAddress(a) for a in _receivers_list], #address array
+                [Web3.to_checksum_address(a) for a in _receivers_list], #address array
                 #[1*10**18 for a in range(len(_receivers_list))] #amount array for qdao
-                #_amounts #amount array for qdao
-                1*10**16 #constant amount for qdefi
+                _amounts #amount array for qdao
+                #1*10**16 #constant amount for qdefi
             ]
         )
         logging.debug('tx_data={}'.format(tx_data))
@@ -40,22 +40,22 @@ def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
             'to': config.ADDRESS_TOKEN, 
             'from': config.ADDRESS_OPERATOR, 
             'data': tx_data,
-            'nonce':w3.eth.getTransactionCount(config.ADDRESS_OPERATOR), 
+            'nonce':w3.eth.get_transaction_count(config.ADDRESS_OPERATOR), 
             #'nonce':2, 
-            'gas':7000000, 
+            'gas':70000000, 
             'gasPrice': _gasPrice
         }
         logging.debug('tx_full_data={}'.format(tx_full_data))
 
-        _estGas = w3.eth.estimateGas(tx_full_data)
+        _estGas = w3.eth.estimate_gas(tx_full_data)
         logging.info(
             '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n'
             'Estimate gas = {}\n'
             'gasPrice = {} gwei\n'
             'Estimate tx cost = {} eth\n'.format(
                 _estGas,
-                w3.fromWei(_gasPrice, 'gwei'),
-                w3.fromWei(_estGas*_gasPrice, 'ether')
+                w3.from_wei(_gasPrice, 'gwei'),
+                w3.from_wei(_estGas*_gasPrice, 'ether')
             )
         )
         # choice = input('Do you realy want sign and send this tx ? (Yes/no): ')
@@ -66,14 +66,14 @@ def handle_batch_transfer(_receivers_list, _file, _amounts=[]):
         logging.warning('Error in w3.eth.estimateGas = {}'.format(e.args))
     else:
         #Sign tx
-        signed_tx=w3.eth.account.signTransaction(
+        signed_tx=w3.eth.account.sign_transaction(
             tx_full_data, 
             private_key=config.ADDRESS_OPERATOR_PRIVKEY
         )
         logging.debug('signed_tx={}'.format(signed_tx))
         
         #Send Raw tx
-        tx_hash = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
         logging.info('File {}  etherscan tx_hash= {}'.format(_file ,tx_hash.hex()))
         return tx_hash.hex() 
     finally:
@@ -239,34 +239,34 @@ elif 'ws:'.upper()  in config.WEB3_PROVIDER.upper() or 'wss:'.upper() in config.
     w3 = Web3(Web3.WebsocketProvider(config.WEB3_PROVIDER))    
 else:
     w3 = Web3(IPCProvider(config.WEB3_PROVIDER))
-logging.info('w3.eth.blockNumber=' + str(w3.eth.blockNumber))
+logging.info('w3.eth.blockNumber=' + str(w3.eth.block_number))
 #w3.eth.defaultAccount  = config.ADDRESS_OPERATOR
 
 
-_gasPrice = w3.toWei(config.GAS_PRICE, 'gwei')
-
+#_gasPrice = w3.toWei(config.GAS_PRICE, 'gwei')
+_gasPrice = 100000000
 #Need some injection on Rinkeby and -dev networks
-if  w3.net.version == '4':
-    from web3.middleware import geth_poa_middleware
-    w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+# if  w3.net.version == '4':
+#     from web3.middleware import geth_poa_middleware
+#     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 
 token = w3.eth.contract(address=config.ADDRESS_TOKEN,
     abi=config.TOKEN_ABI
 )
 
-name     = token.functions.name().call()
-symbol   = token.functions.symbol().call()
-decimals = token.functions.decimals().call()
-totalSupply = token.functions.totalSupply().call()
-logging.info('Token contract at address {} initialized:{} ({}), decimals={}, totalSupply={}'.format(
-    config.ADDRESS_TOKEN,
-    name,
-    symbol,
-    decimals,
-    totalSupply
-    )
-)
+# name     = token.functions.name().call()
+# symbol   = token.functions.symbol().call()
+# decimals = token.functions.decimals().call()
+# totalSupply = token.functions.totalSupply().call()
+# logging.info('Token contract at address {} initialized:{} ({}), decimals={}, totalSupply={}'.format(
+#     config.ADDRESS_TOKEN,
+#     name,
+#     symbol,
+#     decimals,
+#     totalSupply
+#     )
+# )
 
 BATCH_SIZE=200
 
